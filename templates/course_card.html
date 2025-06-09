@@ -1,0 +1,90 @@
+<div class="card">
+  {% if badge %}
+    <div class="badge">{{ badge }}</div>
+  {% endif %}
+
+  <!-- Platform Source Badge -->
+  {% if 'ai' in rec.platform|lower or 'gpt' in rec.title|lower or 'recommender' in rec.title|lower %}
+    <div class="badge" style="top: 40px; background-color: #0ea5e9;">🧠 AI Pick</div>
+  {% elif 'coursera' in rec.platform|lower or 'edx' in rec.platform|lower or 'nptel' in rec.platform|lower %}
+    <div class="badge" style="top: 40px; background-color: #6366f1;">🏛 University</div>
+  {% endif %}
+
+  <img src="{{ url_for('static', filename='platform_thumbs/' + rec.platform|lower|replace(' ', '_') + '.png') }}"
+       alt="Course image"
+       class="thumbnail" />
+
+  <div class="content">
+    <div class="course-title">{{ rec.title }}</div>
+    <div class="platform"><i class="fas fa-graduation-cap"></i> {{ rec.platform }}</div>
+
+    {% if rec.description %}
+    <div class="description">
+      <span class="short-desc">
+        {{ rec.description[:130] }}{% if rec.description|length > 130 %}...{% endif %}
+      </span>
+      {% if rec.description|length > 130 %}
+      <span class="full-desc" style="display: none;">{{ rec.description }}</span>
+      <a href="#" class="toggle-link" onclick="toggleDesc(this); return false;">Read more</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="tags">
+      {% for tag in rec.tags %}
+        <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="match-score">Match Score: <strong>{{ rec.score }}%</strong></div>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: {{ rec.score }}%;"></div>
+    </div>
+
+    <a href="{{ rec.link }}" target="_blank" class="visit-btn">Visit Course</a>
+  </div>
+</div>
+
+<script>
+  function toggleDesc(link) {
+    const card = link.closest('.description');
+    const shortDesc = card.querySelector('.short-desc');
+    const fullDesc = card.querySelector('.full-desc');
+    if (fullDesc.style.display === 'none') {
+      fullDesc.style.display = 'inline';
+      shortDesc.style.display = 'none';
+      link.textContent = 'Show less';
+    } else {
+      fullDesc.style.display = 'none';
+      shortDesc.style.display = 'inline';
+      link.textContent = 'Read more';
+    }
+  }
+</script>
+
+<style>
+.description {
+  font-size: 0.85rem;
+  color: var(--desc-color, #374151);
+  margin: 8px 0 12px;
+  line-height: 1.4;
+}
+
+.toggle-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-top: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.toggle-link:hover {
+  text-decoration: underline;
+}
+
+body.dark-theme .description {
+  --desc-color: #cbd5e1;
+}
+</style>
