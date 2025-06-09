@@ -54,7 +54,7 @@ python app.py
 Then open http://localhost:5000 in your browser.
 
 > ✅ Python 3.7+ recommended
-
+```
 
 
 
